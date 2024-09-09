@@ -1,0 +1,22 @@
+{
+    "2024-09-09": [
+        {
+            "name": "salar_v2",
+            "type": "exit",
+            "timestamp": "2024-09-09 05:15:20",
+            "percentage": 51.85925561334257,
+            "sent_to_server": true,
+            "server_response": "Success",
+            "sent_to_server_time": "2024-09-09 05:37:01"
+        },
+        {
+            "name": "salar",
+            "type": "exit",
+            "timestamp": "2024-09-09 05:15:41",
+            "percentage": 43.85518178456326,
+            "sent_to_server": true,
+            "server_response": "Success",
+            "sent_to_server_time": "2024-09-09 05:37:02"
+        }
+    ]
+}

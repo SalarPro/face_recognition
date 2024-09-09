@@ -65,6 +65,7 @@ while True:
     else:
         print("Error: Could not read frame.")
         break
+    cv2.waitKey(1000)
 
 cap.release()
 cv2.destroyAllWindows()
