@@ -1,5 +1,4 @@
 .vscode
-known_faces
 known_faces2
 myenv
 myenv__
@@ -8,3 +7,4 @@ myenv/*.*
 myenv_old
 myenv)old_2
 user_images
+__pycache__
