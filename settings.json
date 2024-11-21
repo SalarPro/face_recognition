@@ -1,0 +1,13 @@
+{
+    "wt_for_duplicate": 15,
+    "wt_for_each_frame": 5,
+    "camera_id_exit": 0,
+    "camera_id_enter": 2,
+    "accepted_percentage": 50,
+    "token": "",
+    "api_key": "",
+    "api_secret": "",
+    "api_prefix": "http://kavin.test/api/v1/",
+    "api_url_save_user_attendance": "attendance/save",
+    "api_url_update_face_encoding": "attendance/update-face-encoding"
+}

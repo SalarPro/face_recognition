@@ -1,22 +1,126 @@
 {
-    "2024-09-09": [
+    "2024-11-19": [
         {
-            "name": "salar_v2",
-            "type": "exit",
-            "timestamp": "2024-09-09 05:15:20",
-            "percentage": 51.85925561334257,
-            "sent_to_server": true,
-            "server_response": "Success",
-            "sent_to_server_time": "2024-09-09 05:37:01"
+            "name": "1_salar_v3",
+            "type": "enter",
+            "timestamp": "2024-11-19 20:51:05",
+            "percentage": 61.66480544524775,
+            "sent_to_server": false,
+            "server_response": {
+                "message": "type should be either entry or exit",
+                "status": "error"
+            },
+            "sent_to_server_time": "2024-11-21 21:20:01"
         },
         {
-            "name": "salar",
+            "name": "1_salar",
+            "type": "enter",
+            "timestamp": "2024-11-19 20:51:13",
+            "percentage": 60.90319097417656,
+            "sent_to_server": false,
+            "server_response": {
+                "message": "type should be either entry or exit",
+                "status": "error"
+            },
+            "sent_to_server_time": "2024-11-21 21:20:01"
+        },
+        {
+            "name": "1_salar",
+            "type": "enter",
+            "timestamp": "2024-11-19 20:51:28",
+            "percentage": 60.79484254040053,
+            "sent_to_server": false,
+            "server_response": {
+                "message": "type should be either entry or exit",
+                "status": "error"
+            },
+            "sent_to_server_time": "2024-11-21 21:20:01"
+        },
+        {
+            "name": "1_salar",
+            "type": "enter",
+            "timestamp": "2024-11-19 21:00:11",
+            "percentage": 51.5949376542691,
+            "sent_to_server": false,
+            "server_response": {
+                "message": "type should be either entry or exit",
+                "status": "error"
+            },
+            "sent_to_server_time": "2024-11-21 21:20:01"
+        }
+    ],
+    "2024-11-21": [
+        {
+            "name": "1_salar_v2",
             "type": "exit",
-            "timestamp": "2024-09-09 05:15:41",
-            "percentage": 43.85518178456326,
+            "timestamp": "2024-11-21 21:09:36",
+            "percentage": 64.0930994184833,
             "sent_to_server": true,
-            "server_response": "Success",
-            "sent_to_server_time": "2024-09-09 05:37:02"
+            "server_response": {
+                "message": "entry",
+                "status": "success"
+            },
+            "sent_to_server_time": "2024-11-21 21:11:00"
+        },
+        {
+            "name": "1_salar",
+            "type": "exit",
+            "timestamp": "2024-11-21 21:09:44",
+            "percentage": 56.87656965544239,
+            "sent_to_server": true,
+            "server_response": {
+                "message": "entry",
+                "status": "success"
+            },
+            "sent_to_server_time": "2024-11-21 21:11:00"
+        },
+        {
+            "name": "1_salar_v3",
+            "type": "exit",
+            "timestamp": "2024-11-21 21:10:17",
+            "percentage": 63.7017011756291,
+            "sent_to_server": true,
+            "server_response": {
+                "message": "entry",
+                "status": "success"
+            },
+            "sent_to_server_time": "2024-11-21 21:11:00"
+        },
+        {
+            "name": "1_salar",
+            "type": "exit",
+            "timestamp": "2024-11-21 21:10:28",
+            "percentage": 59.847974939811735,
+            "sent_to_server": true,
+            "server_response": {
+                "message": "entry",
+                "status": "success"
+            },
+            "sent_to_server_time": "2024-11-21 21:11:00"
+        },
+        {
+            "name": "1_salar_v3",
+            "type": "exit",
+            "timestamp": "2024-11-21 21:12:28",
+            "percentage": 62.739157687657844,
+            "sent_to_server": true,
+            "server_response": {
+                "message": "entry",
+                "status": "success"
+            },
+            "sent_to_server_time": "2024-11-21 21:13:00"
+        },
+        {
+            "name": "1_salar",
+            "type": "exit",
+            "timestamp": "2024-11-21 21:12:41",
+            "percentage": 66.2892964949401,
+            "sent_to_server": true,
+            "server_response": {
+                "message": "entry",
+                "status": "success"
+            },
+            "sent_to_server_time": "2024-11-21 21:13:00"
         }
     ]
 }
