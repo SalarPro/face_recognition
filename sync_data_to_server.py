@@ -19,6 +19,19 @@ class SyncDataToServer:
         self.loop.run_until_complete(self.sync())
     
     def calculate_data(self):
+
+        # read settings.json to get sync_to_server value it is a boolean value
+        sync_to_server = False
+        try:
+            with open('settings.json', 'r') as f:
+                settings = json.load(f)
+                sync_to_server = settings['sync_to_server']
+        except Exception as e:
+            print(f"Error: {e}")
+        
+        if not sync_to_server:
+            return
+        
         with open('employee_data.json', 'r') as f:
             employee_data = json.load(f)
         

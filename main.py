@@ -1,3 +1,13 @@
+""" 
+mac:
+source myenv/Scripts/activate
+python main.py
+
+Windows:
+.\myenv\Scripts\Activate.ps1
+python main.py
+"""
+
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
@@ -11,11 +21,16 @@ from setting_window import SettingsWindow
 from tkinter import PhotoImage
 from sync_data_to_server import SyncDataToServer
 from CameraThread import CameraThread
+import os
+
+
+
 
 
 camera_id_exit = 0
 camera_id_enter = 1
 
+print("Loading...")
 
 class FaceRecognitionApp:
     def __init__(self, root):
@@ -107,23 +122,44 @@ class FaceRecognitionApp:
         self.callServer.grid(row=4, column=0, padx=10, pady=10)
         
     def start_recognition(self, camera_index):
+        print(f"Starting recognition for camera {camera_index}")
+        start_time = time.time()
+        print(f"Camera thread 111 {time.time() - start_time:.2f}")
         if camera_index not in self.camera_threads or not self.camera_threads[camera_index].running:
-            frame_queue = queue.Queue()
+            # print(f"Camera thread 222 {time.time() - start_time:.2f}")
+            frame_queue = queue.Queue(maxsize= 10)
+            # print(f"Camera thread 333 {time.time() - start_time:.2f}")
             wt_for_each_frame = 1
+            # print(f"Camera thread 444 {time.time() - start_time:.2f}")
             try:
+                # print(f"Camera thread 555 {time.time() - start_time:.2f}")
                 with open('settings.json', 'r') as f:
+                    # print(f"Camera thread 666 {time.time() - start_time:.2f}")
                     settings = json.load(f)
-                    wt_for_each_frame = settings['wt_for_each_frame'] # time in seconds
-                    # if wt_for_each_frame is number else 0
-                    wt_for_each_frame = wt_for_each_frame if wt_for_each_frame else 0
+                    # print(f"Camera thread 777 {time.time() - start_time:.2f}")
+                    wt_for_each_frame = settings.get('wt_for_each_frame', 1)  # time in seconds
+                    # print(f"Camera thread 888 {time.time() - start_time:.2f}")
+                    # Ensure wt_for_each_frame is a number
+                    wt_for_each_frame = wt_for_each_frame if isinstance(wt_for_each_frame, (int, float)) else 0
+                    # print(f"Camera thread 999 {time.time() - start_time:.2f}")
             except Exception as e:
+                # print(f"Camera thread 1000 {time.time() - start_time:.2f}")
                 print(f"Error: {e}")
-                
+            # print(f"Camera thread 1111 {time.time() - start_time:.2f}")
+            
             delay = wt_for_each_frame
+            # print(f"Camera thread 1222 {time.time() - start_time:.2f}")
             camera_thread = CameraThread(camera_index, self.face_cascade, self.known_face_encodings, self.known_face_names, frame_queue, self.register_user, delay)
+            # print(f"Camera thread 1333 {time.time() - start_time:.2f}")
             self.camera_threads[camera_index] = camera_thread
+            # print(f"Camera thread 1444 {time.time() - start_time:.2f}")
             self.frame_queues[camera_index] = frame_queue
+            # print(f"Camera thread 1555 {time.time() - start_time:.2f}")
             camera_thread.start()
+            # print(f"Camera thread 1666 {time.time() - start_time:.2f}")
+            # end_time = time.time()
+            # print(f"Camera thread 1777 {time.time() - start_time:.2f}")
+            # print(f"Camera thread started in {end_time - start_time:.2f} seconds")
     
     def stop_recognition(self, camera_index):
         if camera_index in self.camera_threads and self.camera_threads[camera_index].running:
@@ -171,9 +207,15 @@ class FaceRecognitionApp:
             "sent_to_server": False,
             "server_response": None,
         }
-        
+
+        if not os.path.exists('user_images'):
+            os.makedirs('user_images')
+            
         # save frame to the user_images folder and give it current time as name
-        cv2.imwrite(f"user_images/{name}_{timestamp}.jpg", cv2.cvtColor(current_frame, cv2.COLOR_RGB2BGR))
+        try:
+            cv2.imwrite(f"user_images/{name}_{timestamp}.jpg", cv2.cvtColor(current_frame, cv2.COLOR_RGB2BGR))
+        except Exception as e:
+            print(f"Error: {e}")
         fileName = f"user_images/{name}_{timestamp}.jpg"
         
         data['image'] = fileName

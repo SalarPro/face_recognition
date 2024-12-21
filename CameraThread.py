@@ -21,11 +21,12 @@ class CameraThread(threading.Thread):
 
     def run(self):
         self.cap = cv2.VideoCapture(self.camera_index)
-        #sleep for 1 second to make sure the camera is opened
-        time.sleep(1)
+        
+        # Check if the camera is opened successfully
         if not self.cap.isOpened():
             print(f"Error: Could not open camera {self.camera_index}.")
             return
+        
         self.running = True
         while self.running:
             ret, frame = self.cap.read()
@@ -35,7 +36,10 @@ class CameraThread(threading.Thread):
             else:
                 print(f"Error: Could not read frame from camera {self.camera_index}.")
                 self.stop()
+        
         self.cap.release()
+        end_time = time.time()
+        print(f"Camera thread ran for {end_time - start_time:.2f} seconds")
 
     def stop(self):
         self.running = False
@@ -43,7 +47,10 @@ class CameraThread(threading.Thread):
     
 
     def process_frame(self, frame):
+        start_time = time.time()
+        print(f"Camera P.F. 111 {time.time() - start_time:.2f}")
         accepted_percentage = 80
+        print(f"Camera P.F. 111 {time.time() - start_time:.2f}")
         try:
             with open('settings.json', 'r') as f:
                 settings = json.load(f)
@@ -52,16 +59,22 @@ class CameraThread(threading.Thread):
                 accepted_percentage = accepted_percentage if accepted_percentage and 0 <= accepted_percentage <= 100 else 80
         except Exception as e:
             print(f"Error123: {e}")
+        print(f"Camera P.F. 222 {time.time() - start_time:.2f}")
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        print(f"Camera P.F. 333 {time.time() - start_time:.2f}")
         faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=7, minSize=(250, 250))
+        print(f"Camera P.F. 444 {time.time() - start_time:.2f}")
         
         face_locations = []
         for (x, y, w, h) in faces:
             face_locations.append((y, x + w, y + h, x))
+        print(f"Camera P.F. 555 {time.time() - start_time:.2f}")
         
         face_encodings = face_recognition.face_encodings(frame, face_locations)
+        print(f"Camera P.F. 666 {time.time() - start_time:.2f}")
         
         for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
+            print(f"Camera P.FOOR. -9- {time.time() - start_time:.2f}")
             matches = face_recognition.compare_faces(self.known_face_encodings, face_encoding)
             name = "Unknown"
             best_match_index = None
@@ -94,5 +107,6 @@ class CameraThread(threading.Thread):
             else:
                 cv2.putText(frame, name, (left, top - 10), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255), 2)
                 cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+        print(f"Camera P.F. -9- {time.time() - start_time:.2f}")
         
         return frame

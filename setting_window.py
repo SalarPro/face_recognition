@@ -70,9 +70,19 @@ class SettingsWindow:
         self.api_url_update_face_encoding_entry.grid(row=10, column=1, sticky='ew')
         self.api_url_update_face_encoding_entry.insert(0, self.settings["api_url_update_face_encoding"])
 
+        tk.Label(root, text="Sync Interval").grid(row=11, column=0, sticky='e')
+        self.sync_interval_entry = tk.Entry(root, width=50)
+        self.sync_interval_entry.grid(row=11, column=1, sticky='ew')
+        self.sync_interval_entry.insert(0, self.settings["sync_interval"])
+
+        tk.Label(root, text="Sync to Server").grid(row=12, column=0, sticky='e')
+        self.sync_to_server_var = tk.BooleanVar(value=self.settings["sync_to_server"])
+        self.sync_to_server_checkbutton = tk.Checkbutton(root, variable=self.sync_to_server_var)
+        self.sync_to_server_checkbutton.grid(row=12, column=1, sticky='w')
+
         # Add save button
         save_button = tk.Button(root, text="Save", command=self.update_settings)
-        save_button.grid(row=11, column=0, columnspan=2, sticky='e', padx=10, pady=10)
+        save_button.grid(row=13, column=0, columnspan=2, sticky='e', padx=10, pady=10)
 
         # Make the columns expand with the window
         root.grid_columnconfigure(1, weight=1)
@@ -97,6 +107,8 @@ class SettingsWindow:
         self.settings["api_prefix"] = self.api_prefix_entry.get()
         self.settings["api_url_save_user_attendance"] = self.api_url_save_user_attendance_entry.get()
         self.settings["api_url_update_face_encoding"] = self.api_url_update_face_encoding_entry.get()
+        self.settings["sync_interval"] = int(self.sync_interval_entry.get())
+        self.settings["sync_to_server"] = self.sync_to_server_var.get()
         self.save_settings(self.settings)
         # messagebox.showinfo("Info", "Settings saved successfully", parent=self.root)
         self.root.destroy()
