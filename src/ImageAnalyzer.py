@@ -4,6 +4,7 @@ import face_recognition
 import json
 import time
 import pickle
+import Database as db
 
 class ImageAnalyzer:
     
@@ -17,6 +18,7 @@ class ImageAnalyzer:
         print("ImageAnalyzer created")
         self.known_face_encodings, self.known_face_names = self.load_known_faces()
         self.accepted_percentage = self.load_settings()
+        
 
     def load_known_faces(self):
         with open(self.face_encodings_path, 'rb') as f:
@@ -33,6 +35,11 @@ class ImageAnalyzer:
             return 80
 
     def compare_faces(self, image_path):
+        
+        # if image file start with done_ then return
+        if image_path.split('\\')[-1].startswith('done_'):
+            return "Unknown", -1
+        
         image = cv2.imread(image_path)
         if image is None:
             print(f"Error: Could not read image {image_path}")
@@ -60,37 +67,54 @@ class ImageAnalyzer:
         return "Unknown", 0
 
     def record_attendee(self, name, percentage, image_path):
-        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        date = time.strftime("%Y-%m-%d", time.localtime())
-        data = {
-            "name": name,
-            "timestamp": timestamp,
-            "percentage": percentage,
-            "image": image_path,
-            "sent_to_server": False,
-            "server_response": None,
-        }
 
-        if not os.path.exists(self.employee_data_path):
-            employee_data = {}
+        # filePahtName
+        # (i|o)I(time).jpg
+        # ex: i_1735393560.4280732.jpg
+        # image path start with i or o, i is for in and o is for out
+        print(image_path) # ./user_images_queue\i_1735402052.2187057.jpg
+        fileName = image_path.split('\\')[-1]
+        type = fileName[0]
+        timeStr = fileName.split('_')[1].split('.')[0]
+
+        print(type)
+        if type == 'i':
+            type = 'in'
+        elif type == 'o':
+            type = 'out'
         else:
-            with open(self.employee_data_path, 'r') as f:
-                employee_data = json.load(f)
+            os.remove(image_path)
+            return
+        
+        # rename image file add done to the beginning of the file name
+        os.rename(image_path, f"./user_images_queue/done_{fileName}")
+        image_path = f"./user_images_queue/done_{fileName}"
+        
+        # timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(timeStr)))
+        # date = time.strftime("%Y-%m-%d", time.localtime())
+        # data = {
+        #     "name": name,
+        #     "timestamp": timestamp,
+        #     "percentage": percentage,
+        #     "image": image_path,
+        #     "sent_to_server": False,
+        #     "server_response": None,
+        #     "type": type
+        # }
+        # name start with number_string
+        userId = name.split('_')[0]
+        userName = name.split('_')[1]
 
-        if date not in employee_data:
-            employee_data[date] = []
-
-        employee_data[date].append(data)
-
-        with open(self.employee_data_path, 'w') as f:
-            json.dump(employee_data, f, indent=4)
-
+        self.db.insert(userId,userName, timestamp, percentage, image_path, 0, None, type, None)
         print(f"Recorded {name} with {percentage:.2f}% similarity at {timestamp}")
         # delete the image file
-        os.remove(image_path)
+        # os.remove(image_path)
+        
 
     def start(self):
         print("ImageAnalyzer started")
+        self.db = db.Database()
             
         if not os.path.exists(self.user_images_queue_path):
             print(f"Error: The directory {self.user_images_queue_path} does not exist.")
@@ -102,9 +126,10 @@ class ImageAnalyzer:
                 name, percentage = self.compare_faces(image_path)
                 if name != "Unknown":
                     self.record_attendee(name, percentage, image_path)
-                else:
+                elif percentage != -1:
                     os.remove(image_path)
-
+        self.db.close()
+        print("ImageAnalyzer stopped")
 # if __name__ == "__main__":
 #     analyzer = ImageAnalyzer('face_data/face_encodings.pkl', 'settings.json', 'user_images_queue')
 #     analyzer.start()

@@ -3,3 +3,4 @@ face_recognition
 opencv-python
 requests
 setuptools
+mysql-connector-python  

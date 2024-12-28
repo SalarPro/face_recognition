@@ -13,6 +13,7 @@ from sync_data_to_server import SyncDataToServer
 from CameraThread import CameraThread
 from ImageAnalyzer import ImageAnalyzer
 import os
+from LoadUserData import LoadUserData
 
 
 camera_id_exit = 0
@@ -65,6 +66,9 @@ class FaceRecognitionApp:
         app.run()
 
         
+    def load_user_data(self):
+        loadUserData = LoadUserData()
+        loadUserData.start()
     
     def create_widgets(self):
         
@@ -121,6 +125,10 @@ class FaceRecognitionApp:
         self.exit_button = ttk.Button(self.root, text="Exit", command=lambda: self.exit_the_app())
         self.exit_button.grid(row=5, column=0, padx=10, pady=10)
         
+        
+        self.load_user_data_button = ttk.Button(self.root, text="Load User Data", command=lambda: self.load_user_data())
+        self.load_user_data_button.grid(row=5, column=1, padx=10, pady=10)
+        
         # create button to start image coparing using ImageAnalyzer.py
         self.start_image_analyzer_button = ttk.Button(self.root, text="Start Image Analyzer", command=lambda: self.start_image_analyzer())
         self.start_image_analyzer_button.grid(row=6, column=0, padx=10, pady=10)
@@ -169,7 +177,7 @@ class FaceRecognitionApp:
             
             delay = wt_for_each_frame
             # print(f"Camera thread 1222 {time.time() - start_time:.2f}")
-            camera_thread = CameraThread(camera_index, self.face_cascade, self.known_face_encodings, self.known_face_names, frame_queue, self.register_user, delay)
+            camera_thread = CameraThread(camera_index, self.face_cascade, self.known_face_encodings, self.known_face_names, frame_queue, self.register_user, delay, camera_index == camera_id_enter)
             # print(f"Camera thread 1333 {time.time() - start_time:.2f}")
             self.camera_threads[camera_index] = camera_thread
             # print(f"Camera thread 1444 {time.time() - start_time:.2f}")

@@ -23,8 +23,9 @@ class CameraThread(threading.Thread):
     face_cascade_path = 'face_data/haarcascade_frontalface_default.xml'
     
     
-    def __init__(self, camera_index, face_cascade, known_face_encodings, known_face_names, frame_queue, register_user_func, delay):
+    def __init__(self, camera_index, face_cascade, known_face_encodings, known_face_names, frame_queue, register_user_func, delay, isIn=True):
         super().__init__()
+        self.isIn = isIn
         self.camera_index = camera_index
         self.face_cascade = face_cascade
         self.known_face_encodings = known_face_encodings
@@ -153,6 +154,10 @@ class CameraThread(threading.Thread):
             # add text saying "Welcome" to the user
             # cv2.putText(frame, "Welcome", (screen_width-200, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
             
+            
+        doorName = "Entrance" if self.isIn else "Exit"
+        cv2.putText(frame, f"{doorName} Camera", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        
 
         
         return frame
@@ -167,7 +172,7 @@ class CameraThread(threading.Thread):
         if not os.path.exists(tmp_dir):
             os.makedirs(tmp_dir)
         cTime = time.time()
-        full_path = os.path.join(tmp_dir, f'f_{cTime}.jpg')
+        full_path = os.path.join(tmp_dir, f'{"i" if self.isIn else "o"}_{cTime}.jpg')
 
         if cv2.imwrite(full_path, frame) == True:
             print(f"Image saved as {full_path}")
