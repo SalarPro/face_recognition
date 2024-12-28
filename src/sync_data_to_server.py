@@ -17,11 +17,12 @@ class SyncDataToServer:
         
 
     async def sync(self):
-        pass
-        # while True:
-        #     if time.localtime().tm_sec == 0:
-        #         self.calculate_data()
-            # await asyncio.sleep(1)
+        # runSeconds = [15, 30, 45, 0]
+        runSeconds = [0, 30]
+        while True:
+            if time.localtime().tm_sec in runSeconds:
+                self.calculate_data()
+            await asyncio.sleep(1)
             
     def run(self):
         self.loop.run_until_complete(self.sync())

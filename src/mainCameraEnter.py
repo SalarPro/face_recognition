@@ -31,12 +31,12 @@ class FaceRecognitionApp:
     
     def __init__(self, root):
         self.root = root
-        self.root.title("Kavin | face recognition attendance system")
+        self.root.title("Kavin | Enter Camera")
         self.root.attributes("-topmost", True)  # Make the window always on top
         icon = PhotoImage(file="ico.png")
         self.root.iconphoto(True, icon)
         # put to the center of the screen
-        self.root.geometry("800x500+{}+{}".format(int(self.root.winfo_screenwidth()/2 - 250), int(self.root.winfo_screenheight()/2 - 250)))
+        self.root.geometry("300x100+{}+{}".format(int(self.root.winfo_screenwidth()/2 - 250), int(self.root.winfo_screenheight()/2 - 250)))
         # make it start in the second monitor
         
         # override the close button to call the exit_the_app function
@@ -58,6 +58,10 @@ class FaceRecognitionApp:
         
         # Start the main loop for updating frames
         self.update_frames()
+        
+        # dellay for 2 seconds
+        time.sleep(2)
+        self.start_recognition(camera_id_enter)
     
     
     def open_settings(self):
@@ -86,16 +90,16 @@ class FaceRecognitionApp:
         self.lbl1 = ttk.Label(self.root, text="Developed by Z Tech .office")
         self.lbl1.grid(row=10, column=10, padx=10, pady=50)
         # Start button for exit camera
-        self.start_exit_button = ttk.Button(self.root, text="Start Exit Camera", command=lambda: self.start_recognition(camera_id_exit))
-        self.start_exit_button.grid(row=0, column=0, padx=10, pady=10)
+        # self.start_exit_button = ttk.Button(self.root, text="Start Exit Camera", command=lambda: self.start_recognition(camera_id_exit))
+        # self.start_exit_button.grid(row=0, column=0, padx=10, pady=10)
         
         # Start button for enter camera
         self.start_enter_button = ttk.Button(self.root, text="Start Enter Camera", command=lambda: self.start_recognition(camera_id_enter))
         self.start_enter_button.grid(row=0, column=1, padx=10, pady=10)
         
         # Stop button for exit camera
-        self.stop_exit_button = ttk.Button(self.root, text="Stop Exit Camera", command=lambda: self.stop_recognition(camera_id_exit))
-        self.stop_exit_button.grid(row=1, column=0, padx=10, pady=10)
+        # self.stop_exit_button = ttk.Button(self.root, text="Stop Exit Camera", command=lambda: self.stop_recognition(camera_id_exit))
+        # self.stop_exit_button.grid(row=1, column=0, padx=10, pady=10)
         
         # Stop button for enter camera
         self.stop_enter_button = ttk.Button(self.root, text="Stop Enter Camera", command=lambda: self.stop_recognition(camera_id_enter))
@@ -104,34 +108,34 @@ class FaceRecognitionApp:
         
         # add tow frame to show the camera feed
         # frame for exit camera
-        self.exit_frame = ttk.Frame(self.root, width=100, height=100)
-        self.exit_frame.grid(row=2, column=0, padx=10, pady=10)
+        # self.exit_frame = ttk.Frame(self.root, width=100, height=100)
+        # self.exit_frame.grid(row=2, column=0, padx=10, pady=10)
         # pring all ttk.Frame attributes
         
         # frame for enter camera
-        self.enter_frame = ttk.Frame(self.root, width=100, height=100)
-        self.enter_frame.grid(row=2, column=1, padx=10, pady=10)
+        # self.enter_frame = ttk.Frame(self.root, width=100, height=100)
+        # self.enter_frame.grid(row=2, column=1, padx=10, pady=10)
         # make bg color white
     
         # add new button for setting and open setting_window.py
-        self.setting_button = ttk.Button(self.root, text="Settings", command=lambda: self.open_settings())
-        self.setting_button.grid(row=3, column=0, padx=10, pady=10)
+        # self.setting_button = ttk.Button(self.root, text="Settings", command=lambda: self.open_settings())
+        # self.setting_button.grid(row=3, column=0, padx=10, pady=10)
         
         # add new button for setting and open setting_window.py
-        self.callServer = ttk.Button(self.root, text="CALL Server", command=lambda: SyncDataToServer().calculate_data())
-        self.callServer.grid(row=4, column=0, padx=10, pady=10)
+        # self.callServer = ttk.Button(self.root, text="CALL Server", command=lambda: SyncDataToServer().calculate_data())
+        # self.callServer.grid(row=4, column=0, padx=10, pady=10)
         
         # add new button to exit the app
-        self.exit_button = ttk.Button(self.root, text="Exit", command=lambda: self.exit_the_app())
-        self.exit_button.grid(row=5, column=0, padx=10, pady=10)
+        # self.exit_button = ttk.Button(self.root, text="Exit", command=lambda: self.exit_the_app())
+        # self.exit_button.grid(row=5, column=0, padx=10, pady=10)
         
         
-        self.load_user_data_button = ttk.Button(self.root, text="Load User Data", command=lambda: self.load_user_data())
-        self.load_user_data_button.grid(row=5, column=1, padx=10, pady=10)
+        # self.load_user_data_button = ttk.Button(self.root, text="Load User Data", command=lambda: self.load_user_data())
+        # self.load_user_data_button.grid(row=5, column=1, padx=10, pady=10)
         
         # create button to start image coparing using ImageAnalyzer.py
-        self.start_image_analyzer_button = ttk.Button(self.root, text="Start Image Analyzer", command=lambda: self.start_image_analyzer())
-        self.start_image_analyzer_button.grid(row=6, column=0, padx=10, pady=10)
+        # self.start_image_analyzer_button = ttk.Button(self.root, text="Start Image Analyzer", command=lambda: self.start_image_analyzer())
+        # self.start_image_analyzer_button.grid(row=6, column=0, padx=10, pady=10)
         
     def start_image_analyzer(self):
         print("Starting image analyzer...")
@@ -297,3 +301,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = FaceRecognitionApp(root)
     root.mainloop()
+    
+    

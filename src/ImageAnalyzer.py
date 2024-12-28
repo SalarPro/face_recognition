@@ -5,6 +5,8 @@ import json
 import time
 import pickle
 import Database as db
+import asyncio
+
 
 class ImageAnalyzer:
     
@@ -18,7 +20,18 @@ class ImageAnalyzer:
         print("ImageAnalyzer created")
         self.known_face_encodings, self.known_face_names = self.load_known_faces()
         self.accepted_percentage = self.load_settings()
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
         
+    async def sync(self):
+        runSeconds = [15, 45]
+        while True:
+            if time.localtime().tm_sec in runSeconds:
+                self.start()
+            await asyncio.sleep(1)
+            
+    def run(self):
+        self.loop.run_until_complete(self.sync())
 
     def load_known_faces(self):
         with open(self.face_encodings_path, 'rb') as f:
