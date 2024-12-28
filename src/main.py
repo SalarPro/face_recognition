@@ -1,13 +1,3 @@
-""" 
-mac:
-source myenv/Scripts/activate
-python main.py
-
-Windows:
-.\myenv\Scripts\Activate.ps1
-python main.py
-"""
-
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
@@ -21,10 +11,8 @@ from setting_window import SettingsWindow
 from tkinter import PhotoImage
 from sync_data_to_server import SyncDataToServer
 from CameraThread import CameraThread
+from ImageAnalyzer import ImageAnalyzer
 import os
-
-
-
 
 
 camera_id_exit = 0
@@ -33,6 +21,13 @@ camera_id_enter = 1
 print("Loading...")
 
 class FaceRecognitionApp:
+    
+    setting_path = 'settings.json'
+    employee_data_path = 'attendee/employee_data.json'
+    face_encodings_path = 'face_data/face_encodings.pkl'
+    user_images_queue_path = '../user_images_queue'
+    face_cascade_path = 'face_data/haarcascade_frontalface_default.xml'
+    
     def __init__(self, root):
         self.root = root
         self.root.title("Kavin | face recognition attendance system")
@@ -43,16 +38,19 @@ class FaceRecognitionApp:
         self.root.geometry("800x500+{}+{}".format(int(self.root.winfo_screenwidth()/2 - 250), int(self.root.winfo_screenheight()/2 - 250)))
         # make it start in the second monitor
         
+        # override the close button to call the exit_the_app function
+        self.root.protocol("WM_DELETE_WINDOW", self.exit_the_app) 
+        
         
         self.camera_threads = {}
         self.frame_queues = {}
         
         # Load known face encodings and names
-        with open('face_encodings.pkl', 'rb') as f:
+        with open(self.face_encodings_path, 'rb') as f:
             self.known_face_encodings, self.known_face_names = pickle.load(f)
         
         # Load the Haar Cascade for face detection
-        self.face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+        self.face_cascade = cv2.CascadeClassifier(self.face_cascade_path)
         
         # Create GUI elements
         self.create_widgets()
@@ -70,10 +68,8 @@ class FaceRecognitionApp:
     
     def create_widgets(self):
         
-        # get camera_id_exit camera_id_enter from settings.json
-
         try:
-            with open('settings.json', 'r') as f:
+            with open(self.setting_path, 'r') as f:
                 settings = json.load(f)
                 camera_id_exit = settings['camera_id_exit']
                 camera_id_enter = settings['camera_id_enter']
@@ -121,6 +117,30 @@ class FaceRecognitionApp:
         self.callServer = ttk.Button(self.root, text="CALL Server", command=lambda: SyncDataToServer().calculate_data())
         self.callServer.grid(row=4, column=0, padx=10, pady=10)
         
+        # add new button to exit the app
+        self.exit_button = ttk.Button(self.root, text="Exit", command=lambda: self.exit_the_app())
+        self.exit_button.grid(row=5, column=0, padx=10, pady=10)
+        
+        # create button to start image coparing using ImageAnalyzer.py
+        self.start_image_analyzer_button = ttk.Button(self.root, text="Start Image Analyzer", command=lambda: self.start_image_analyzer())
+        self.start_image_analyzer_button.grid(row=6, column=0, padx=10, pady=10)
+        
+    def start_image_analyzer(self):
+        print("Starting image analyzer...")
+        image_analyzer = ImageAnalyzer()
+        print("Before start")
+        image_analyzer.start()
+        print("After start")
+        
+    def exit_the_app(self):
+        print("Exiting the app...🤑")
+        # self.root.destroy()
+        # end all process inclooding the sync_data_to_server and the camera threads and queues
+        self.root.quit()
+        self.root.destroy()
+        os._exit(0)
+        
+        
     def start_recognition(self, camera_index):
         print(f"Starting recognition for camera {camera_index}")
         start_time = time.time()
@@ -133,7 +153,7 @@ class FaceRecognitionApp:
             # print(f"Camera thread 444 {time.time() - start_time:.2f}")
             try:
                 # print(f"Camera thread 555 {time.time() - start_time:.2f}")
-                with open('settings.json', 'r') as f:
+                with open(self.setting_path, 'r') as f:
                     # print(f"Camera thread 666 {time.time() - start_time:.2f}")
                     settings = json.load(f)
                     # print(f"Camera thread 777 {time.time() - start_time:.2f}")
@@ -183,7 +203,7 @@ class FaceRecognitionApp:
     def register_user(self, name, percentage, camera_index, current_frame):
         accepted_percentage = 80
         try:
-            with open('settings.json', 'r') as f:
+            with open(self.setting_path, 'r') as f:
                 settings = json.load(f)
                 accepted_percentage = settings['accepted_percentage']
                 # check if is number else between 0 and 100 else 80
@@ -222,7 +242,7 @@ class FaceRecognitionApp:
         
         employee_data = {}
         try:
-            with open('employee_data.json', 'r') as f:
+            with open(self.employee_data_path, 'r') as f:
                 employee_data = json.load(f)
         except Exception as e:
             print(f"Error: {e}")
@@ -243,7 +263,7 @@ class FaceRecognitionApp:
             currentTime = time.mktime(time.strptime(timestamp, "%Y-%m-%d %H:%M:%S"))
             wt_for_duplicate = 1
             try:
-                with open('settings.json', 'r') as f:
+                with open(self.setting_path, 'r') as f:
                     settings = json.load(f)
                     wt_for_duplicate = settings['wt_for_duplicate'] # time in seconds
                     # if wt_for_duplicate is number else 0
@@ -256,7 +276,7 @@ class FaceRecognitionApp:
 
         employee_data[date].append(data)
         try:
-            with open('employee_data.json', 'w') as f:
+            with open(self.employee_data_path, 'w') as f:
                 json.dump(employee_data, f, indent=4)
         except Exception as e:
             print(f"Error: {e}")

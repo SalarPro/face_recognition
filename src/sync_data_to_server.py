@@ -13,7 +13,7 @@ class SyncDataToServer:
         while True:
             if time.localtime().tm_sec == 0:
                 self.calculate_data()
-            await asyncio.sleep(1)
+            # await asyncio.sleep(1)
             
     def run(self):
         self.loop.run_until_complete(self.sync())

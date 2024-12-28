@@ -7,7 +7,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 known_faces_dir = 'known_faces'  # Directory where known faces images are stored
-encodings_file = 'face_encodings.pkl'  # File to save the encodings
+encodings_file = 'face_data/face_encodings.pkl'  # File to save the encodings
 
 known_face_encodings = []
 known_face_names = []
