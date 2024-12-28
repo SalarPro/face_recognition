@@ -19,7 +19,7 @@ from LoadUserData import LoadUserData
 camera_id_exit = 0
 camera_id_enter = 1
 
-print("Loading...")
+print("Loading... Camera Exit")
 
 class FaceRecognitionApp:
     
@@ -98,8 +98,8 @@ class FaceRecognitionApp:
         # self.start_enter_button.grid(row=0, column=1, padx=10, pady=10)
         
         # Stop button for exit camera
-        # self.stop_exit_button = ttk.Button(self.root, text="Stop Exit Camera", command=lambda: self.stop_recognition(camera_id_exit))
-        # self.stop_exit_button.grid(row=1, column=0, padx=10, pady=10)
+        self.stop_exit_button = ttk.Button(self.root, text="Stop Exit Camera", command=lambda: self.stop_recognition(camera_id_exit))
+        self.stop_exit_button.grid(row=1, column=0, padx=10, pady=10)
         
         # # Stop button for enter camera
         # self.stop_enter_button = ttk.Button(self.root, text="Stop Enter Camera", command=lambda: self.stop_recognition(camera_id_enter))
@@ -126,8 +126,8 @@ class FaceRecognitionApp:
         # self.callServer.grid(row=4, column=0, padx=10, pady=10)
         
         # add new button to exit the app
-        self.exit_button = ttk.Button(self.root, text="Exit", command=lambda: self.exit_the_app())
-        self.exit_button.grid(row=5, column=0, padx=10, pady=10)
+        # self.exit_button = ttk.Button(self.root, text="Exit", command=lambda: self.exit_the_app())
+        # self.exit_button.grid(row=5, column=0, padx=10, pady=10)
         
         
         # self.load_user_data_button = ttk.Button(self.root, text="Load User Data", command=lambda: self.load_user_data())

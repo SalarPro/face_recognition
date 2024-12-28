@@ -30,7 +30,6 @@ class SyncDataToServer:
     def calculate_data(self):
         print("Calculating data")
         self.db = db.Database()
-        print("Database created v2")
         # read settings.json to get sync_to_server value it is a boolean value
         sync_to_server = False
         try:
@@ -44,11 +43,8 @@ class SyncDataToServer:
             print("Sync to server is disabled")
             return
         
-        print("Sync to server is enabled")
         unsent_entries = self.db.get_all_unsent()
-        print(f"Unsent entries: {unsent_entries}")
-        
-        
+        print(f"Unsent entries count: {len(unsent_entries)}")
         
         for entry in unsent_entries:
             response = self.send_data_to_server(entry)
@@ -64,6 +60,7 @@ class SyncDataToServer:
                 print(f"Error: {e}")
         
         self.db.close()
+        print("Data calculation completed")
 
     def send_data_to_server(self, data):
 

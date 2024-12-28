@@ -19,7 +19,7 @@ from LoadUserData import LoadUserData
 camera_id_exit = 0
 camera_id_enter = 1
 
-print("Loading...")
+print("Loading... Camera Enter")
 
 class FaceRecognitionApp:
     
