@@ -58,6 +58,9 @@ class SyncDataToServer:
                     continue
             except Exception as e:
                 print(f"Error: {e}")
+            # sleep for 0.1 second
+            time.sleep(0.2)
+            
         
         self.db.close()
         print("Data calculation completed")
@@ -113,7 +116,10 @@ class SyncDataToServer:
             if resp['status'] == 'success':
                 if os.path.exists(imageName):
                     openFile.close()
-                    os.remove(imageName)
+                    try:
+                        os.remove(imageName)
+                    except Exception as e:
+                        print(f"Error: {e}")
             print(f"Response: {response.json()}")
             return response.json()
         except requests.exceptions.RequestException as e:

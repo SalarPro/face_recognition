@@ -35,7 +35,7 @@ class Database:
         return self.cursor.fetchall()
 
     def get_all_unsent(self):
-        self.cursor.execute("SELECT * FROM attendees WHERE sent_to_server = 0")
+        self.cursor.execute("SELECT * FROM attendees WHERE sent_to_server = 0 ORDER BY time ASC")
         return self.cursor.fetchall()
 
     def update_sent(self, id):

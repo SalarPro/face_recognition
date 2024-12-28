@@ -123,7 +123,7 @@ class CameraThread(threading.Thread):
     def process_frame_without_comparing(self, frame):
         # only show rectangles around faces
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=6, minSize=(150, 150), flags=cv2.CASCADE_SCALE_IMAGE)
+        faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=6, minSize=(100, 100), flags=cv2.CASCADE_SCALE_IMAGE)
         
         current_time = time.time()
         # print those values: current_time - self.last_recorded_time2 > self.each_frame_latency
