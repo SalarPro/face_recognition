@@ -5,6 +5,12 @@ import asyncio
 import requests
 
 class SyncDataToServer:
+    
+    setting_path = 'settings.json'
+    employee_data_path = 'attendee/employee_data.json'
+    face_encodings_path = 'face_data/face_encodings.pkl'
+    user_images_queue_path = '../user_images_queue'
+    face_cascade_path = 'face_data/haarcascade_frontalface_default.xml'
     def __init__(self):
         self.loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self.loop)
@@ -23,7 +29,7 @@ class SyncDataToServer:
         # read settings.json to get sync_to_server value it is a boolean value
         sync_to_server = False
         try:
-            with open('settings.json', 'r') as f:
+            with open(self.setting_path, 'r') as f:
                 settings = json.load(f)
                 sync_to_server = settings['sync_to_server']
         except Exception as e:
@@ -32,7 +38,7 @@ class SyncDataToServer:
         if not sync_to_server:
             return
         
-        with open('employee_data.json', 'r') as f:
+        with open(self.employee_data_path, 'r') as f:
             employee_data = json.load(f)
         
         for date, entries in employee_data.items():
@@ -55,7 +61,7 @@ class SyncDataToServer:
                     entry['server_response'] = response
                     entry['sent_to_server_time'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         
-        with open('employee_data.json', 'w') as f:
+        with open(self.employee_data_path, 'w') as f:
             json.dump(employee_data, f, indent=4)
 
 
@@ -66,7 +72,7 @@ class SyncDataToServer:
         api_prefix = "http://kavin.test/api/v1/"
         apiKey = ""
         try:
-            with open('settings.json', 'r') as f:
+            with open(self.setting_path, 'r') as f:
                 settings = json.load(f)
                 api_prefix = settings['api_prefix']
                 apiKey = settings['api_key']
