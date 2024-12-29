@@ -9,7 +9,7 @@
     ```
 2. Activate the virtual environment:
     ```sh
-    source myenv/Scripts/activate
+    source myenv/bin/activate
     ```
 3. Upgrade pip:
     ```sh
