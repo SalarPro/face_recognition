@@ -17,8 +17,8 @@ class SyncDataToServer:
         
 
     async def sync(self):
-        # runSeconds = [15, 30, 45, 0]
-        runSeconds = [0, 30]
+        runSeconds = [15, 30, 45, 0]
+        # runSeconds = [0, 30]
         while True:
             if time.localtime().tm_sec in runSeconds:
                 self.calculate_data()
@@ -38,7 +38,7 @@ class SyncDataToServer:
                     settings = json.load(f)
                     sync_to_server = settings['sync_to_server']
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"Error[8976765]: {e}")
             
             if not sync_to_server:
                 print("Sync to server is disabled")
@@ -58,22 +58,23 @@ class SyncDataToServer:
                         self.db.delete(entry[0])
                         continue
                 except Exception as e:
-                    print(f"Error: {e}")
+                    print(f"Error[24765]: {e}")
                 # sleep for 0.1 second
                 time.sleep(0.2)
                 
             
             self.db.close()
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Error[892245]: {e}")
             try:
                 self.db.close()
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"Error[995321]: {e}")
         print("Data calculation completed")
 
     def send_data_to_server(self, data):
         try:
+            openFile = None
             dId = data[0]
             dUserId = data[1]
             dName = data[2]
@@ -93,7 +94,7 @@ class SyncDataToServer:
                     api_prefix = settings['api_prefix']
                     apiKey = settings['api_key']
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"Error[08998]: {e}")
             
             url = api_prefix + "entry"
             
@@ -126,12 +127,22 @@ class SyncDataToServer:
                         try:
                             os.remove(imageName)
                         except Exception as e:
-                            print(f"Error: {e}")
+                            print(f"Error[90321111]: {e}")
                 print(f"Response: {response.json()}")
                 return response.json()
             except requests.exceptions.RequestException as e:
-                print(f"Error123 sending data to server: {e}")
+                print(f"Error[890533] sending data to server: {e}")
+                try:
+                    if openFile:
+                        openFile.close()
+                except Exception as e:
+                    print(f"Error[68346663]: {e}")
                 return str(e)
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Error[07425]: {e}")
+            try:
+                if openFile:
+                    openFile.close()
+            except Exception as e:
+                print(f"Error[964565]: {e}")
             return str(e)

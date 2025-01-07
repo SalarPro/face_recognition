@@ -52,8 +52,8 @@ class LoadUserData:
         
         enFace = EncodeFaces()
         enFace.encode_faces()
-        
-        print("start function end")
+
+        print("encode function end")
 
     def loadUserImage(self, users):
         print("loadUserImage function")
@@ -67,12 +67,15 @@ class LoadUserData:
             os.remove(f"{self.user_images_faces_path}/{file}")
             
         for user in users:
-            userId = user['id']
-            userName = user['name']
-            idName = user['idName']
-            userImage = user['image']
-            imgPath = self.downloadImage(userImage, idName)
-            self.enhanceImage(imgPath, idName)
+            # userId = user['id']
+            # userName = user['name']
+            # idName = user['idName']
+            # userImage = user['image']
+            for userImage in user['images'] :
+                tImgPath = userImage['path']
+                tImgName = userImage['name']
+                imgPath = self.downloadImage(tImgPath, tImgName)
+                self.enhanceImage(imgPath)
             
     def downloadImage(self, url, idName):
         try:
@@ -88,7 +91,7 @@ class LoadUserData:
             print(f"Error: {e}")
             return None
     
-    def enhanceImage(self, imgPath, idName):
+    def enhanceImage(self, imgPath):
         # detect face in the image
         # zoom in the face {crop the face}
         # using cv2

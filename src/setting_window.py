@@ -96,8 +96,8 @@ class SettingsWindow:
             json.dump(settings, file, indent=4)
 
     def update_settings(self):
-        self.settings["wt_for_duplicate"] = int(self.wt_for_duplicate_entry.get())
-        self.settings["wt_for_each_frame"] = int(self.wt_for_each_frame_entry.get())
+        self.settings["wt_for_duplicate"] = float(self.wt_for_duplicate_entry.get())
+        self.settings["wt_for_each_frame"] = float(self.wt_for_each_frame_entry.get())
         self.settings["camera_id_exit"] = int(self.camera_id_exit_entry.get())
         self.settings["camera_id_enter"] = int(self.camera_id_enter_entry.get())
         self.settings["accepted_percentage"] = int(self.accepted_percentage_entry.get())

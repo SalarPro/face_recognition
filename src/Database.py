@@ -1,8 +1,10 @@
 import mysql.connector
+import datetime
+from datetime import timedelta
 
 class Database:
     def __init__(self):
-        print("Database created")
+        # print("Database created")
         self.connection = mysql.connector.connect(
             host="127.0.0.1",
             port=3306,
@@ -13,7 +15,8 @@ class Database:
         
         # check if the connection is successful
         if self.connection.is_connected():
-            print("Database connection successful")
+            # print("Database connection successful")
+            pass
         else:
             print("Database connection failed")
 
@@ -29,6 +32,27 @@ class Database:
         values = (userId, name, time, percentage, image, sent_to_server, server_response, type, sent_to_server_time)
         self.cursor.execute(query, values)
         self.connection.commit()
+        
+        
+    def insertV2(self, userId, name, time, percentage, image, sent_to_server, server_response, enterType, sent_to_server_time, timeStamp):
+        try:
+            # check if the last record for the user type is the same and the time margin is less than 5 minutes return false
+            query = "SELECT * FROM attendees WHERE user_id = %s AND type = %s ORDER BY time DESC LIMIT 1"
+            self.cursor.execute(query, (userId, enterType))
+            result = self.cursor.fetchone()
+            if result:
+                if result[3] - timeStamp < timedelta(seconds=300):
+                    return False
+                
+            query = "INSERT INTO attendees (user_id, name, time, percentage, image, sent_to_server, server_response, type, sent_to_server_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            values = (userId, name, time, percentage, image, sent_to_server, server_response, enterType, sent_to_server_time)
+            self.cursor.execute(query, values)
+            self.connection.commit()
+        except mysql.connector.Error as err:
+            print(f"Error[DB:39408]: {err}")
+            return False
+        
+        return True
 
     def get_all(self):
         self.cursor.execute("SELECT * FROM attendees")

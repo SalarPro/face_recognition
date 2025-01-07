@@ -1,3 +1,68 @@
 {
-    "2024-12-28": []
+    "2024-12-28": [],
+    "2024-12-29": [
+        {
+            "name": "1_salar_khald_nwry_jafr",
+            "type": "exit",
+            "timestamp": "2024-12-29 16:09:30",
+            "percentage": 60.134726408664676,
+            "sent_to_server": false,
+            "server_response": null,
+            "image": "user_images/1_salar_khald_nwry_jafr_2024-12-29 16:09:30.jpg"
+        },
+        {
+            "name": "1_salar_khald_nwry_jafr",
+            "type": "enter",
+            "timestamp": "2024-12-29 16:09:32",
+            "percentage": 60.55519379434217,
+            "sent_to_server": false,
+            "server_response": null,
+            "image": "user_images/1_salar_khald_nwry_jafr_2024-12-29 16:09:32.jpg"
+        },
+        {
+            "name": "1_salar_khald_nwry_jafr",
+            "type": "exit",
+            "timestamp": "2024-12-29 16:09:33",
+            "percentage": 62.42014904394032,
+            "sent_to_server": false,
+            "server_response": null,
+            "image": "user_images/1_salar_khald_nwry_jafr_2024-12-29 16:09:33.jpg"
+        },
+        {
+            "name": "1_salar_khald_nwry_jafr",
+            "type": "enter",
+            "timestamp": "2024-12-29 16:09:34",
+            "percentage": 63.353716345949884,
+            "sent_to_server": false,
+            "server_response": null,
+            "image": "user_images/1_salar_khald_nwry_jafr_2024-12-29 16:09:34.jpg"
+        },
+        {
+            "name": "1_salar_khald_nwry_jafr",
+            "type": "enter",
+            "timestamp": "2024-12-29 16:09:36",
+            "percentage": 61.01153998753336,
+            "sent_to_server": false,
+            "server_response": null,
+            "image": "user_images/1_salar_khald_nwry_jafr_2024-12-29 16:09:36.jpg"
+        },
+        {
+            "name": "1_salar_khald_nwry_jafr",
+            "type": "exit",
+            "timestamp": "2024-12-29 16:09:37",
+            "percentage": 55.92925925920693,
+            "sent_to_server": false,
+            "server_response": null,
+            "image": "user_images/1_salar_khald_nwry_jafr_2024-12-29 16:09:37.jpg"
+        },
+        {
+            "name": "1_salar_khald_nwry_jafr",
+            "type": "enter",
+            "timestamp": "2024-12-29 16:09:39",
+            "percentage": 59.68246428144132,
+            "sent_to_server": false,
+            "server_response": null,
+            "image": "user_images/1_salar_khald_nwry_jafr_2024-12-29 16:09:39.jpg"
+        }
+    ]
 }

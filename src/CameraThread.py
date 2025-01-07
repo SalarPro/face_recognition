@@ -22,6 +22,8 @@ class CameraThread(threading.Thread):
     user_images_queue_path = '../user_images_queue'
     face_cascade_path = 'face_data/haarcascade_frontalface_default.xml'
     
+    tries = 0
+    errorsCount = 0
     
     def __init__(self, camera_index, face_cascade, known_face_encodings, known_face_names, frame_queue, register_user_func, delay, isIn=True):
         super().__init__()
@@ -43,7 +45,7 @@ class CameraThread(threading.Thread):
                 # check if is number else between 0 and 100 else 80
                 self.accepted_percentage = accepted_percentage if accepted_percentage and 0 <= accepted_percentage <= 100 else 80
         except Exception as e:
-            print(f"Error123: {e}")
+            print(f"Error[6746]: {e}")
             
         self.last_recorded_time2 = time.time()
         self.remove_user_registered = time.time()
@@ -53,19 +55,31 @@ class CameraThread(threading.Thread):
         
         # Check if the camera is opened successfully
         if not self.cap.isOpened():
-            print(f"Error: Could not open camera {self.camera_index}.")
+            print(f"Error[00657]: Could not open camera {self.camera_index}.")
             return
         
         self.running = True
         while self.running:
-            ret, frame = self.cap.read()
-            if ret:
-                # frame = self.process_frame(frame)
-                frame = self.process_frame_without_comparing(frame)
-                self.frame_queue.put(frame)
-            else:
-                print(f"Error: Could not read frame from camera {self.camera_index}.")
-                self.stop()
+            try:
+                ret, frame = self.cap.read()
+                if ret:
+                    # frame = self.process_frame(frame)
+                    frame = self.process_frame_without_comparing(frame)
+                    self.frame_queue.put(frame)
+                else:
+                    print(f"Error[06654]: Could not read frame from camera {self.camera_index}.")
+                    self.stop()
+                self.tries = 0
+            except Exception as e:
+                print(f"Error[090909] Camera {'in' if self.isIn else 'out'}: {e}")
+                # sleep for 1 second
+                self.errorsCount += 1
+                self.tries += 1
+                time.sleep(1)
+                if self.tries > 5:
+                    self.stop()
+                    break
+                # self.stop()
         
         self.cap.release()
 
@@ -122,43 +136,51 @@ class CameraThread(threading.Thread):
 
     def process_frame_without_comparing(self, frame):
         # only show rectangles around faces
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.05, minNeighbors=6, minSize=(100, 100), flags=cv2.CASCADE_SCALE_IMAGE)
-        
-        current_time = time.time()
-        # print those values: current_time - self.last_recorded_time2 > self.each_frame_latency
-        if current_time - self.last_recorded_time2 > self.delay and len(faces) > 0:#
-            imgRes = self.save_frame(frame)
-            self.last_recorded_time2 = current_time
-            self.remove_user_registered = current_time + 1.8
-            self.user_image_path = imgRes
-        
-        for (x, y, w, h) in faces:
-            # cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 6)
-            # draw rounded rectangle
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2, cv2.FILLED, 0)
+        try:
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=8, minSize=(100, 100), flags=cv2.CASCADE_SCALE_IMAGE)
             
-        #save a copy of the frame to /user_images
-        # if remove_user_registered > current_time: show user image in the button corner of the screen
-        if self.remove_user_registered > current_time and self.user_image_path != "":
-            # print(f"User image path: {self.user_image_path}")
-            user_img = cv2.imread(self.user_image_path)
-            user_img = cv2.resize(user_img, (200, 150))
-            # 3:4 aspect ratio
-            # get screen width and height
-            screen_width = frame.shape[1]
-            screen_height = frame.shape[0]
-            # frame[screen_height-150:screen_height, 0:200] = user_img
-            # button right
-            frame[0:150, screen_width-200:screen_width] = user_img
-            # add text saying "Welcome" to the user
-            # cv2.putText(frame, "Welcome", (screen_width-200, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            current_time = time.time()
+            # print those values: current_time - self.last_recorded_time2 > self.each_frame_latency
+            if current_time - self.last_recorded_time2 > self.delay and len(faces) > 0:#
+                imgRes = self.save_frame(frame)
+                self.last_recorded_time2 = current_time
+                self.remove_user_registered = current_time + 1.8
+                self.user_image_path = imgRes
             
+            for (x, y, w, h) in faces:
+                # cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 6)
+                # draw rounded rectangle
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2, cv2.FILLED, 0)
+                
+            #save a copy of the frame to /user_images
+            # if remove_user_registered > current_time: show user image in the button corner of the screen
+            try:
+                if self.remove_user_registered > current_time and self.user_image_path != "" and os.path.exists(self.user_image_path):
+                    # print(f"User image path: {self.user_image_path}")
+                    # check if the file exists
+                    user_img = cv2.imread(self.user_image_path)
+                    user_img = cv2.resize(user_img, (200, 150))
+                    # 3:4 aspect ratio
+                    # get screen width and height
+                    screen_width = frame.shape[1]
+                    screen_height = frame.shape[0]
+                    # frame[screen_height-150:screen_height, 0:200] = user_img
+                    # button right
+                    frame[0:150, screen_width-200:screen_width] = user_img
+                    # add text saying "Welcome" to the user
+                    # cv2.putText(frame, "Welcome", (screen_width-200, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            except Exception as e:
+                print(f"Error[654584]: {e}")
+                
+            doorName = "Entrance" if self.isIn else "Exit"
+            cv2.putText(frame, f"{doorName} Camera", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
             
-        doorName = "Entrance" if self.isIn else "Exit"
-        cv2.putText(frame, f"{doorName} Camera", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
-        
+            if self.errorsCount > 0:
+                cv2.putText(frame, f"Errors: {self.errorsCount}", (5, 60), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 1)
 
+        except Exception as e:
+            print(f"Error[998711]: {e}")
         
         return frame
 
@@ -175,7 +197,7 @@ class CameraThread(threading.Thread):
         full_path = os.path.join(tmp_dir, f'{"i" if self.isIn else "o"}_{cTime}.jpg')
 
         if cv2.imwrite(full_path, frame) == True:
-            print(f"Image saved as {full_path}")
+            print(f"[784564]Image saved as {full_path}")
         else:
-            print("Error: Could not save image.")
+            print("Error[95678]: Could not save image.")
         return full_path
